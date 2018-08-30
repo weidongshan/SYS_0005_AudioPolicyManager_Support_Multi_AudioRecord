@@ -26,7 +26,24 @@ and you can get three new so files: libaudiopolicymanagerdefault.so libaudiopoli
   mount -o remount /system  
   
 3.2 copy the three so files to /system/lib and reboot   
+cp out/target/product/tiny4412/system/lib/libaudiopolicymanagerdefault.so /work/nfs_root/android_fs/alsa/multi_record  
+cp out/target/product/tiny4412/system/lib/libaudiopolicymanager.so        /work/nfs_root/android_fs/alsa/multi_record  
+cp out/target/product/tiny4412/system/lib/libaudiopolicyservice.so        /work/nfs_root/android_fs/alsa/multi_record  
+  
    
 3.3 now you can run two or more apps to record sound at one time
-     
+./AudioRecordTest 44100 2 1.pcm  &  
+./AudioRecordTest 44100 2 2.pcm  &  
+./AudioRecordTest 8000  2 3.pcm  &  
+  
+killall AudioRecordTest  
+  
+./pcm2wav 1.pcm 44100 2 1.wav  
+./pcm2wav 2.pcm 44100 2 2.wav  
+./pcm2wav 3.pcm 8000  2 3.wav  
+  
+tinyplay 1.wav  
+tinyplay 2.wav  
+tinyplay 3.wav  
+ 
   

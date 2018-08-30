@@ -1356,6 +1356,17 @@ audio_io_handle_t AudioPolicyManager::getInput(audio_source_t inputSource,
     config.channel_mask = channelMask;
     config.format = format;
 
+	/* check wether have an AudioInputDescriptor use the same profile */
+	for (size_t input_index = 0; input_index < mInputs.size(); input_index++) {
+		sp<AudioInputDescriptor> desc;
+		desc = mInputs.valueAt(input_index);
+		if (desc->mProfile == profile) {
+			desc->mOpenRefCount++;        // 引用计数加1    
+			desc->mSessions.add(session); // session
+			return desc->mIoHandle;
+		}
+	}	
+
     status_t status = mpClientInterface->openInput(profile->mModule->mHandle,
                                                    &input,
                                                    &config,
